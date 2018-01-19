@@ -19,3 +19,5 @@ LTC | 190.621 | 100 | 19062.10
 ETH | 1035.86 | 10 | 10358.60
 Total 40922.80
 ```
+
+Disclaimer: the numbers currently are just examples...I don't own 1 BTC.
