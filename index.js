@@ -22,34 +22,40 @@ let getTotalPortfolioPrice = async function() {
   })
   
   let sum = 0
+  let btc_sum = 0
   for(coin in coins){
     const amount = coins[coin].amount
     const price = coins[coin].info.price_usd
+    const btc_price = coins[coin].info.price_btc
     const total = price * amount
-    // console.log(coin, '|', price, '|', amount, '|', total.toFixed(2))
+    const btc_total = btc_price * amount
     sum += total
+    btc_sum += btc_total
+
+    // console.log(coin, '|', price, '|', amount, '|', total.toFixed(2), '|', btc_total)
   }
 
-  return sum
+  return {'usd': sum, 'btc': btc_sum}
 };
 
 let profitLossPercentage = async function() {
   let initialInvestment = process.env.CRYPTO_INITIAL_INVESTMENT
   let total = await getTotalPortfolioPrice()
 
-  return (total/initialInvestment) * 100.0
+  return ((total.usd/initialInvestment) * 100.0) - 100
 }
 
 let messageUser = async function(){
   const profitLoss = await profitLossPercentage()
-  console.log(profitLoss)
-  client.messages.create({
-    body: profitLoss.toFixed(),
-    to: process.env.TWILIO_TO_NUMBER,
-    from: process.env.TWILIO_FROM_NUMBER
-  })
-  .then((message) => console.log(message.sid))
-  .catch((error) => console.log(error))
+  const message = `Profit/Loss ${profitLoss.toFixed(1)}%`
+  console.log(message)
+  // client.messages.create({
+  //   body: message,
+  //   to: process.env.TWILIO_TO_NUMBER,
+  //   from: process.env.TWILIO_FROM_NUMBER
+  // })
+  // .then((message) => console.log(message.sid))
+  // .catch((error) => console.log(error))
 };
 
 const second = 1000
@@ -61,14 +67,4 @@ messageUser()
 
 setInterval(function () { 
   messageUser()
-}, interval);
-
-require('http').createServer((req, res) => {
-  res.end('▲ Hello World')
-}).listen(process.env.PORT)
-
-
-
-
-
-
+}, minute * 5);
