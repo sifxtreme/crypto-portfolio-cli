@@ -32,7 +32,7 @@ let getTotalPortfolioPrice = async function() {
     sum += total
     btc_sum += btc_total
 
-    // console.log(coin, '|', price, '|', amount, '|', total.toFixed(2), '|', btc_total)
+    console.log(coin, '|', price, '|', amount, '|', total.toFixed(2), '|', btc_total)
   }
 
   return {'usd': sum, 'btc': btc_sum}
